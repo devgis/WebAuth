@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+    <div style="text-align:center;">
+        <div>用户名：<input type="text" id="txt_username" /></div>
+        <div>密  码：<input type="password" id="txt_password" /></div>
+        <div><input type="button" value="登录" id="btn_login" class="btn-default" /></div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#btn_login").click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "/Login",
+                    dataType: "json",
+                    data: { u: $("#txt_username").val(), pwd: $("#txt_password").val() },
+                    success: function (data, status) {
+                        if (status == "success") {
+                            if (data.rs) {
+                                //ok
+                                document.cookie = "au=" + data.au;
+                                window.location = "/home/index";
+                                return;
+                            }
+                            else {
+                                alert("登录失败！");
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            });
+        });
+    </script>
+</body>
+</html>
