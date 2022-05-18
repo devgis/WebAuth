@@ -1,0 +1,63 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>datainfo</title>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        //打开页面的时候保存票据信息
+        var UserName = '@ViewBag.UserName';
+        var Ticket = '@ViewBag.Ticket';
+    </script>
+</head>
+<body>
+    <div>当前登录用户：'@ViewBag.UserName'</div>
+
+    <div id="div_test">
+
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                type: "post",
+                url: "/api/values", //?
+                data: "value=我是上传过来的",
+                //data: "u=1&pwd=123&value=我是上传过来的",
+                dataType: "json",
+                //data: "hello world",
+                //headers: { 'Content-Type': 'application/json' },
+                beforeSend: function (XHR) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    //XHR.setRequestHeader('Authorization', 'BasicAuth ' + Ticket);
+                    //XHR.setRequestHeader('u','1 ');
+                    //XHR.setRequestHeader('pwd','123');
+                    XHR.setRequestHeader('au', getCookieByString("au"));
+                },
+                success: function (data, status) {
+                    if (status == "success") {
+                        $("#div_test").html(data);
+                        //$("#div_test").html("Er");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    $("#div_test").html("Error");
+                },
+                complete: function () {
+
+                }
+
+            });
+        });
+
+        function getCookieByString(cookieName) {
+            var start = document.cookie.indexOf(cookieName + '=');
+            if (start == -1) return false;
+            start = start + cookieName.length + 1;
+            var end = document.cookie.indexOf(';', start);
+            if (end == -1) end = document.cookie.length;
+            return document.cookie.substring(start, end);
+        }
+    </script>
+
+</body>
+</html>
